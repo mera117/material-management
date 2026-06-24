@@ -1,0 +1,191 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Administración de Materiales</h1>
+    <p>Gestione el inventario de materiales registrados en el sistema.</p>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <h2>Filtros de Consulta</h2>
+
+      <div class="filters">
+        <select [(ngModel)]="selectedTipo" (change)="filterByTipo()">
+          <option value="">Todos los tipos</option>
+
+          @for (tipo of tipos; track tipo) {
+            <option [value]="tipo">
+              {{ tipo }}
+            </option>
+          }
+        </select>
+
+        <select [(ngModel)]="selectedCiudad" (change)="filterByCiudad()">
+          <option value="">Todas las ciudades</option>
+
+          @for (ciudad of ciudades; track ciudad.id) {
+            <option [value]="ciudad.id">
+              {{ ciudad.nombre }}
+            </option>
+          }
+        </select>
+
+        <button class="btn-secondary" type="button" (click)="loadMateriales()">
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <h2>
+      {{ editing ? "Editar Material" : "Registro de Material" }}
+    </h2>
+
+    <form [formGroup]="form">
+      <div class="form-grid">
+        <div class="field">
+          <label>Nombre</label>
+          <input type="text" formControlName="nombre" />
+        </div>
+
+        <div class="field">
+          <label>Descripción</label>
+          <input type="text" formControlName="descripcion" />
+        </div>
+
+        <div class="field">
+          <label>Tipo de Material</label>
+
+          <select formControlName="tipo">
+            <option value="">Seleccione un tipo</option>
+
+            @for (tipo of tipos; track tipo) {
+              <option [value]="tipo">
+                {{ tipo }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Estado</label>
+
+          <select formControlName="estado">
+            <option value="">Seleccione un estado</option>
+
+            @for (estado of estados; track estado) {
+              <option [value]="estado">
+                {{ estado }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Departamento</label>
+
+          <select
+            formControlName="departamentoId"
+            (change)="onDepartamentoChange()"
+          >
+            <option value="">Seleccione un departamento</option>
+
+            @for (dep of departamentos; track dep.id) {
+              <option [value]="dep.id">
+                {{ dep.nombre }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Ciudad</label>
+
+          <select formControlName="ciudadId">
+            <option value="">Seleccione una ciudad</option>
+
+            @for (ciudad of ciudades; track ciudad.id) {
+              <option [value]="ciudad.id">
+                {{ ciudad.nombre }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Precio</label>
+
+          <input
+            type="number"
+            min="0"
+            placeholder="Ingrese el precio"
+            formControlName="precio"
+          />
+        </div>
+
+        <div class="field">
+          <label>Fecha de Compra</label>
+
+          <input type="date" formControlName="fechaCompra" />
+        </div>
+
+        <div class="field">
+          <label>Fecha de Venta</label>
+
+          <input type="date" formControlName="fechaVenta" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-primary" (click)="save()">
+          {{ editing ? "Actualizar Material" : "Guardar Material" }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <h2>Materiales Registrados</h2>
+
+      <span>Total: {{ materiales.length }}</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th>Ciudad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (material of materiales; track material.id) {
+          <tr>
+            <td>{{ material.nombre }}</td>
+
+            <td>{{ material.tipo }}</td>
+
+            <td>
+              {{ material.precio | currency: "COP" : "symbol" : "1.0-0" }}
+            </td>
+
+            <td>{{ material.estado }}</td>
+
+            <td>{{ material.ciudad }}</td>
+
+            <td>
+              <button class="btn-edit" type="button" (click)="edit(material)">
+                Editar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
